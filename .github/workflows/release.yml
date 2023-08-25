@@ -1,41 +1,37 @@
-name: release
+name: Multi-Arch Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 jobs:
-  goreleaser:
+  build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go_version: [1.16]  # 可以根据需要更改Go版本
+        os: [windows-latest, ubuntu-latest, macos-latest]  # 不同操作系统
+        arch: [amd64, arm64, arm, mips, mips64, ppc64le, s390x, wasm]  # 不同架构
+
     steps:
-      - name: Checkout
-        run: |
-          git version
-          git clone https://github.com/wochaoop/connect_jxyy_network.git /home/runner/work/connect_jxyy_network
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      - name: Set up Go
-        uses: actions/setup-go@v3
+      - name: Setup Go
+        uses: actions/setup-go@v2
         with:
-          go-version: '1.20.6'
+          go-version: ${{ matrix.go_version }}
 
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v4
+      - name: Build for ${{ matrix.os }} ${{ matrix.arch }}
+        run: GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o myapp_${{ matrix.os }}_${{ matrix.arch }}
+
+      - name: Archive Artifacts
+        run: tar -czf myapp_${{ matrix.os }}_${{ matrix.arch }}.tar.gz myapp_${{ matrix.os }}_${{ matrix.arch }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
         with:
-          version: latest
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      #- name: Checkout Dist
-      #  uses: actions/checkout@v2
-      #  with:
-      #    repository: 'gocq/dist'
-      #    ref: master
-      #    ssh-key: ${{ secrets.SSH_KEY }}
-      #    path: upstream/dist
-
-      #- name: Update Dist
-      #  run: |
-      #    chmod +x scripts/upload_dist.sh
-      #    ./scripts/upload_dist.sh
+          name: myapp_${{ matrix.os }}_${{ matrix.arch }}-release
+          path: myapp_${{ matrix.os }}_${{ matrix.arch }}.tar.gz
