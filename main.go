@@ -28,7 +28,7 @@ type Config struct {
 
 func main() {
 	// 从配置文件加载配置
-	config, err := loadConfig("config.yaml")
+	config, err := loadConfig("./config.yaml")
 	if err != nil {
 		fmt.Printf("[%s] 读取配置文件失败: %v\n", currentTime(), err)
 		return
