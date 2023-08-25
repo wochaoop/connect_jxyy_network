@@ -1,37 +1,42 @@
-# 工作流名称
-name: Go Release
-
-# 触发条件
+name: Build and Release
 on:
   push:
-    # 创建 tag 时
     tags:
-      - v*
-
+      - 'v*' # Trigger on tags that start with 'v'
 
 jobs:
-  release:
-    # 运行环境
+  build-release:
     runs-on: ubuntu-latest
+
     steps:
-      # 切换到对应 tag 源码
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      # 安装 Go
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.21
-      # 使用 goreleaser 编译 release
-      - name: Create release on GitHub
-        uses: goreleaser/goreleaser-action@v2
+          go-version: '1.17' # Adjust to your desired Go version
+
+      - name: Cache Go modules
+        uses: actions/cache@v2
         with:
-          # GoReleaser 版本
-          version: latest
-          # 传递给 GoReleaser 的参数
-          args: release --rm-dist
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Build and Release
         env:
-          # 提供访问仓库token
-          GITHUB_TOKEN: ${{secrets.GHCR_PAT}}
+          NAME: connect_jxyy_network # Adjust the project name
+          BINDIR: bin
+        run: |
+          make releases
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: bin/*
+          draft: true
+          token: ${{ secrets.GITHUB_TOKEN }} # Use a GitHub Personal Access Token
