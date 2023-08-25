@@ -1,0 +1,31 @@
+# 以下是配置信息
+
+# 账号，默认是学号
+account: ''
+# 密码，默认是身份证后六位
+password: ''
+# 账号运营商，电信 telecom，移动 cmcc，联通 unicom
+operator: 'telecom'
+
+# 上面的配置是主要的
+
+# 回调
+callback: 'dr1003'
+# 登录方法
+login_method: '1'
+# WAN IPV4 地址，可以不指定
+ipv4: ''
+# WAN IPV6 地址，可以不指定
+ipv6: ''
+# MAC 地址
+mac: '000000000000'
+# 登录入口 ip
+inlet_ip: '192.168.40.2'
+# User-Agent, 一般不用改
+ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'
+# 最大尝试次数
+max_attempts: 12
+# 尝试延迟时间(秒)
+attempt_delay: 5
+# 是否只执行一次，即不要死循环
+only_once: false

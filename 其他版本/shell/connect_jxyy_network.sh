@@ -18,7 +18,7 @@ ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
 
 account='';#账号，默认是学号
 password='';#密码，默认是身份证后六位
-operator="telecom";# 账号后缀，电信 telecom，移动 cmcc，联通 unicom
+operator="telecom";# 账号后缀，电信 telecom，移动 cmcc，联通 unicom
 
 # 检测是否能访问登录页
 return_value="$(curl --connect-timeout 5 -s -A "${ua}" --head "http://${inlet_ip}/" | head -n 1 | grep "HTTP/1.[01] [23]..")";
