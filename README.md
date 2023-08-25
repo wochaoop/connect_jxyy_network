@@ -47,7 +47,13 @@ attempt_delay: 5
 # 是否只执行一次，即不要死循环
 only_once: false
 ```
-5. 直接运行可执行文件
+5. 直接运行可执行文件，可以指定参数
+
+参数示例
+```bash
+# 指定配置文件的路径
+./connect_jxyy_network -config ./config.yaml
+```
 
 ### 使用其它的程序
 

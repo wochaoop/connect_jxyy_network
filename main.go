@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -28,7 +29,11 @@ type Config struct {
 }
 
 func main() {
-	config, err := loadConfig("./config.yaml")
+	// Define command-line flags
+	configFile := flag.String("config", "./config.yaml", "配置文件的路径")
+	flag.Parse()
+
+	config, err := loadConfig(*configFile)
 	if err != nil {
 		fmt.Printf("[%s] 读取配置文件失败: %v\n", currentTime(), err)
 		return
@@ -77,7 +82,6 @@ func main() {
 		}
 
 		sleep(config.AttemptDelay)
-		shouldRunLoop = !config.OnlyOnce
 	}
 }
 
