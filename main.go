@@ -29,7 +29,6 @@ type Config struct {
 }
 
 func main() {
-	// Define command-line flags
 	configFile := flag.String("config", "./config.yaml", "配置文件的路径")
 	flag.Parse()
 
@@ -39,49 +38,60 @@ func main() {
 		return
 	}
 
-	client := http.Client{Timeout: 5 * time.Second}
-	shouldRunLoop := !config.OnlyOnce
+	client := &http.Client{Timeout: 5 * time.Second} // Reuse HTTP client
 
-	for shouldRunLoop {
+	loginDone := make(chan struct{}) // Channel to signal login completion
+	defer close(loginDone)
+
+	go func() {
+		defer func() { loginDone <- struct{}{} }()
+
+		loginIfNeeded(config, client)
+	}()
+
+	for {
+		select {
+		case <-loginDone:
+			// Handle login completion
+			sleep(config.AttemptDelay)
+		}
+	}
+}
+
+func loginIfNeeded(config *Config, client *http.Client) {
+	for {
 		resp, err := client.Get(fmt.Sprintf("http://%s/", config.InletIP))
-		if err != nil || (resp.StatusCode < 200 || resp.StatusCode >= 300) {
-			logMessage("无法访问登录页面")
-			sleep(config.AttemptDelay)
-			continue
-		}
+		if err == nil && resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			body, err := io.ReadAll(resp.Body)
+			_ = resp.Body.Close()
 
-		body, err := io.ReadAll(resp.Body)
-		_ = resp.Body.Close()
+			if err == nil {
+				responseBody := string(body)
 
-		if err != nil {
-			logMessage("无法读取响应体")
-			sleep(config.AttemptDelay)
-			continue
-		}
+				if strings.Contains(responseBody, "Dr.COMWebLoginID_0.htm") {
+					loginURL := fmt.Sprintf("http://%s:801/eportal/portal/login", config.InletIP)
+					loginParams := []string{
+						fmt.Sprintf("callback=%s", config.Callback),
+						fmt.Sprintf("login_method=%s", config.LoginMethod),
+						fmt.Sprintf("user_account=,0,%s@%s", config.Account, config.Operator),
+						fmt.Sprintf("user_password=%s", config.Password),
+						fmt.Sprintf("wlan_user_ip=%s", config.IPv4),
+						fmt.Sprintf("wlan_user_ipv6=%s", config.IPv6),
+						fmt.Sprintf("wlan_user_mac=%s", config.MAC),
+					}
+					loginURLWithParams := fmt.Sprintf("%s?%s", loginURL, strings.Join(loginParams, "&"))
 
-		responseBody := string(body)
-
-		if strings.Contains(responseBody, "Dr.COMWebLoginID_1.htm") {
-			logMessage("已经在线")
-		} else if strings.Contains(responseBody, "Dr.COMWebLoginID_0.htm") {
-			loginURL := fmt.Sprintf("http://%s:801/eportal/portal/login", config.InletIP)
-			loginURLWithParams := fmt.Sprintf("%s?name=0MKKey&callback=%s&login_method=%s&user_account=,0,%s@%s&user_password=%s&wlan_user_ip=%s&wlan_user_ipv6=%s&wlan_user_mac=%s&wlan_ac_ip=&wlan_ac_name=&jsVersion=4.2&terminal_type=1&lang=zh-cn&v=6692&lang=zh",
-				loginURL, config.Callback, config.LoginMethod, config.Account, config.Operator, config.Password, config.IPv4, config.IPv6, config.MAC)
-			resp, err := client.Get(loginURLWithParams)
-			if err != nil {
-				logMessage(fmt.Sprintf("登录时出现错误: %v", err))
-			} else {
-				err := resp.Body.Close()
-				if err != nil {
-					return
+					_, err := client.Get(loginURLWithParams)
+					if err != nil {
+						logMessage(fmt.Sprintf("登录时出现错误: %v", err))
+					} else {
+						logMessage("登录成功")
+					}
 				}
-				logMessage("登录成功")
 			}
-		} else {
-			logMessage("找不到登录页面")
 		}
 
-		sleep(config.AttemptDelay)
+		time.Sleep(time.Duration(config.AttemptDelay) * time.Second)
 	}
 }
 
