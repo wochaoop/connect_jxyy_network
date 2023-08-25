@@ -46,10 +46,7 @@ func main() {
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		err = resp.Body.Close()
-		if err != nil {
-			return
-		}
+		_ = resp.Body.Close()
 
 		if err != nil {
 			logMessage("无法读取响应体")
