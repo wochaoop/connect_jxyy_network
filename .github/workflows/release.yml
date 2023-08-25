@@ -7,7 +7,6 @@ on:
     # 创建 tag 时
     tags:
       - v*
-    # 推送到 master 分支时
 
 
 jobs:
@@ -35,4 +34,4 @@ jobs:
           args: release --rm-dist
         env:
           # 提供访问仓库token
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GHCR_PAT}}
