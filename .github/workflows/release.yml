@@ -39,4 +39,4 @@ jobs:
         with:
           files: bin/*
           draft: true
-          token: ${{ secrets.GITHUB_TOKEN }} # Use a GitHub Personal Access Token
+          token: ${{ secrets.GHCR_PAT }} # Use a GitHub Personal Access Token
