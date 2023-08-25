@@ -57,9 +57,15 @@ func main() {
 			continue
 		}
 
-		if strings.Contains(string(body), "Dr.COMWebLoginID_1.htm") {
-			loginURL := fmt.Sprintf("http://%s:801/eportal/portal/login?callback=%s&login_method=%s&user_account=0,%s@%s&user_password=%s&wlan_user_ip=&wlan_user_ipv6=&wlan_user_mac=&wlan_ac_ip=&wlan_ac_name=&jsVersion=4.2&terminal_type=1&lang=zh-cn&v=6692&lang=zh", config.InletIP, config.Callback, config.LoginMethod, config.Account, config.Operator, config.Password)
-			resp, err = client.Get(loginURL)
+		responseBody := string(body)
+
+		if strings.Contains(responseBody, "Dr.COMWebLoginID_1.htm") {
+			logMessage("已经在线")
+		} else if strings.Contains(responseBody, "Dr.COMWebLoginID_0.htm") {
+			loginURL := fmt.Sprintf("http://%s:801/eportal/portal/login", config.InletIP)
+			loginURLWithParams := fmt.Sprintf("%s?name=0MKKey&callback=%s&login_method=%s&user_account=,0,%s@%s&user_password=%s&wlan_user_ip=%s&wlan_user_ipv6=%s&wlan_user_mac=%s&wlan_ac_ip=&wlan_ac_name=&jsVersion=4.2&terminal_type=1&lang=zh-cn&v=6692&lang=zh",
+				loginURL, config.Callback, config.LoginMethod, config.Account, config.Operator, config.Password, config.IPv4, config.IPv6, config.MAC)
+			resp, err := client.Get(loginURLWithParams)
 			if err != nil {
 				logMessage(fmt.Sprintf("登录时出现错误: %v", err))
 			} else {
