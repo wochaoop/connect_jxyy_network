@@ -5,6 +5,49 @@
 
 目前最新的是Go语言版本，使用前请复制`config_example.yaml`到可执行文件目录下的`config.yaml`，然后根据提示填进去就可以了
 
+## 快速开始
+### 使用Go 语言的程序
+
+1. 去 [Releases](https://github.com/wochaoop/connect_jxyy_network/releases) 下载对应架构的压缩包
+2. 解压这个文件
+3. 切换到与配置文件相同的目录
+4. 创建并编辑`config.yaml`配置文件
+```yaml
+# 以下是配置信息
+
+# 账号，默认是学号
+account: ''
+# 密码，默认是身份证后六位
+password: ''
+# 账号运营商，电信 telecom，移动 cmcc，联通 unicom
+operator: 'telecom'
+
+# 上面的配置是主要的
+
+# 回调
+callback: 'dr1003'
+# 登录方法
+login_method: '1'
+# WAN IPV4 地址，可以不指定
+ipv4: ''
+# WAN IPV6 地址，可以不指定
+ipv6: ''
+# MAC 地址
+mac: '000000000000'
+# 登录入口 ip
+inlet_ip: '192.168.40.2'
+# User-Agent, 一般不用改
+ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'
+# 最大尝试次数
+max_attempts: 12
+# 尝试延迟时间(秒)
+attempt_delay: 5
+# 是否只执行一次，即不要死循环
+only_once: false
+```
+5. 直接运行可执行文件
+
+### 使用其它的程序
 那个`bat`脚本编辑一下配置就可以在 Windows 系统用了，没有做自动检测，但可以利用计划任务实现自动联网
 
 `sh`脚本用在 Linux 系统上 ~~（废话）~~ ,结合 crontab 就可以实现全自动联网，解放双手
