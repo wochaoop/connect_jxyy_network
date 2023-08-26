@@ -4,3 +4,4 @@ config.yaml
 *.exe
 dist/
 bin/
+connect_jxyy_network

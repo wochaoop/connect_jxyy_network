@@ -124,19 +124,21 @@ gz_releases=$(addsuffix .gz, $(PLATFORM_LIST))
 zip_releases=$(addsuffix .zip, $(WINDOWS_ARCH_LIST))
 
 $(gz_releases): %.gz : %
+	-upx -9 $(BINDIR)/$(basename $@)/$(NAME)
 	chmod +x $(BINDIR)/$(basename $@)/$(NAME)
 	gzip -f -S -$(VERSION).gz $(BINDIR)/$(basename $@)/$(NAME)
 	mv $(BINDIR)/$(basename $@)/$(NAME)-$(VERSION).gz $(BINDIR)/$(NAME)-$(basename $@)-$(VERSION).gz
 	rm -r $(BINDIR)/$(basename $@)
 
 $(zip_releases): %.zip : %
+	-upx -9 $(BINDIR)/$(basename $@)/$(NAME)
 	zip -m -j $(BINDIR)/$(basename $@)/$(NAME)-$(VERSION).zip $(BINDIR)/$(basename $@)/$(NAME).exe
 	mv $(BINDIR)/$(basename $@)/$(NAME)-$(VERSION).zip $(BINDIR)/$(NAME)-$(basename $@)-$(VERSION).zip
 	rm -r $(BINDIR)/$(basename $@)
 
 all-arch: $(PLATFORM_LIST) $(WINDOWS_ARCH_LIST)
 
-releases: $(gz_releases) $(zip_releases) ; cp config_example.yaml $(BINDIR)/config.yaml
+releases: $(gz_releases) $(zip_releases)
 
 LINT_OS_LIST := darwin windows linux freebsd openbsd
 

@@ -27,12 +27,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
+      - name: Install UPX
+        run: |
+          curl -L -o upx.tar.xz https://github.com/upx/upx/releases/latest/download/upx-4.1.0-amd64_linux.tar.xz
+          tar -xJf upx.tar.xz
+          mv upx-*-amd64_linux/upx /usr/local/bin/
+
       - name: Build and Release
         env:
           NAME: connect_jxyy_network # Adjust the project name
           BINDIR: bin
         run: |
           make releases
+          cp config_example.yaml bin/config.yaml
 
       - name: Upload Release
         uses: softprops/action-gh-release@v1
