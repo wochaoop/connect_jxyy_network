@@ -40,85 +40,85 @@ WINDOWS_ARCH_LIST = \
 all: linux-amd64 darwin-amd64 windows-amd64 # Most used
 
 darwin-amd64:
-	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 darwin-amd64-v3:
-	GOARCH=amd64 GOOS=darwin GOAMD64=v3 $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=amd64 GOOS=darwin GOAMD64=v3 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 darwin-arm64:
-	GOARCH=arm64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=arm64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-386:
-	GOARCH=386 GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=386 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-amd64:
-	GOARCH=amd64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=amd64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-amd64-v3:
-	GOARCH=amd64 GOOS=linux GOAMD64=v3 $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=amd64 GOOS=linux GOAMD64=v3 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-armv5:
-	GOARCH=arm GOOS=linux GOARM=5 $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=arm GOOS=linux GOARM=5 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-armv6:
-	GOARCH=arm GOOS=linux GOARM=6 $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=arm GOOS=linux GOARM=6 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-armv7:
-	GOARCH=arm GOOS=linux GOARM=7 $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=arm GOOS=linux GOARM=7 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-arm64:
-	GOARCH=arm64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=arm64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-mips-softfloat:
-	GOARCH=mips GOMIPS=softfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=mips GOMIPS=softfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-mips-hardfloat:
-	GOARCH=mips GOMIPS=hardfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=mips GOMIPS=hardfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-mipsle-softfloat:
-	GOARCH=mipsle GOMIPS=softfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=mipsle GOMIPS=softfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-mipsle-hardfloat:
-	GOARCH=mipsle GOMIPS=hardfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=mipsle GOMIPS=hardfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-mips64:
-	GOARCH=mips64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=mips64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-mips64le:
-	GOARCH=mips64le GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=mips64le GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-riscv64:
-	GOARCH=riscv64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=riscv64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-loong64:
-	GOARCH=loong64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=loong64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 freebsd-386:
-	GOARCH=386 GOOS=freebsd $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=386 GOOS=freebsd $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 freebsd-amd64:
-	GOARCH=amd64 GOOS=freebsd $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=amd64 GOOS=freebsd $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 freebsd-amd64-v3:
-	GOARCH=amd64 GOOS=freebsd GOAMD64=v3 $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=amd64 GOOS=freebsd GOAMD64=v3 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 freebsd-arm64:
-	GOARCH=arm64 GOOS=freebsd $(GOBUILD) -o $(BINDIR)/$@/$(NAME)
+	GOARCH=arm64 GOOS=freebsd $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 windows-386:
-	GOARCH=386 GOOS=windows $(GOBUILD) -o $(BINDIR)/$@/$(NAME).exe
+	GOARCH=386 GOOS=windows $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME).exe
 
 windows-amd64:
-	GOARCH=amd64 GOOS=windows $(GOBUILD) -o $(BINDIR)/$@/$(NAME).exe
+	GOARCH=amd64 GOOS=windows $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME).exe
 
 windows-amd64-v3:
-	GOARCH=amd64 GOOS=windows GOAMD64=v3 $(GOBUILD) -o $(BINDIR)/$@/$(NAME).exe
+	GOARCH=amd64 GOOS=windows GOAMD64=v3 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME).exe
 
 windows-arm64:
-	GOARCH=arm64 GOOS=windows $(GOBUILD) -o $(BINDIR)/$@/$(NAME).exe
+	GOARCH=arm64 GOOS=windows $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME).exe
 
 windows-armv7:
-	GOARCH=arm GOOS=windows GOARM=7 $(GOBUILD) -o $(BINDIR)/$@/$(NAME).exe
+	GOARCH=arm GOOS=windows GOARM=7 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME).exe
 
 gz_releases=$(addsuffix .gz, $(PLATFORM_LIST))
 zip_releases=$(addsuffix .zip, $(WINDOWS_ARCH_LIST))
@@ -128,13 +128,11 @@ $(gz_releases): %.gz : %
 	chmod +x $(BINDIR)/$(basename $@)/$(NAME)
 	gzip -f -S -$(VERSION).gz $(BINDIR)/$(basename $@)/$(NAME)
 	mv $(BINDIR)/$(basename $@)/$(NAME)-$(VERSION).gz $(BINDIR)/$(NAME)-$(basename $@)-$(VERSION).gz
-	rm -r $(BINDIR)/$(basename $@)
 
 $(zip_releases): %.zip : %
 	-upx -9 $(BINDIR)/$(basename $@)/$(NAME)
 	zip -m -j $(BINDIR)/$(basename $@)/$(NAME)-$(VERSION).zip $(BINDIR)/$(basename $@)/$(NAME).exe
 	mv $(BINDIR)/$(basename $@)/$(NAME)-$(VERSION).zip $(BINDIR)/$(NAME)-$(basename $@)-$(VERSION).zip
-	rm -r $(BINDIR)/$(basename $@)
 
 all-arch: $(PLATFORM_LIST) $(WINDOWS_ARCH_LIST)
 

@@ -49,12 +49,9 @@ func main() {
 		loginIfNeeded(config, client)
 	}()
 
-	for {
-		select {
-		case <-loginDone:
-			// Handle login completion
-			sleep(config.AttemptDelay)
-		}
+	for range loginDone {
+		// Handle login completion
+		sleep(config.AttemptDelay)
 	}
 }
 
