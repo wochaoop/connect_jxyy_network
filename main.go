@@ -1,58 +1,49 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 	"time"
-
-	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
-	Callback     string `yaml:"callback"`
-	LoginMethod  string `yaml:"login_method"`
-	IPv4         string `yaml:"ipv4"`
-	IPv6         string `yaml:"ipv6"`
-	MAC          string `yaml:"mac"`
-	InletIP      string `yaml:"inlet_ip"`
-	UserAgent    string `yaml:"ua"`
-	Account      string `yaml:"account"`
-	Password     string `yaml:"password"`
-	Operator     string `yaml:"operator"`
-	MaxAttempts  int    `yaml:"max_attempts"`
-	AttemptDelay int    `yaml:"attempt_delay"`
-	OnlyOnce     bool   `yaml:"only_once"`
+	Callback     string
+	LoginMethod  string
+	IPv4         string
+	IPv6         string
+	MAC          string
+	InletIP      string
+	UserAgent    string
+	Account      string
+	Password     string
+	Operator     string
+	MaxAttempts  int
+	AttemptDelay int
+	OnlyOnce     bool
 }
 
 func main() {
-	configFile := flag.String("config", "./config.yaml", "配置文件的路径")
-	flag.Parse()
-
-	config, err := loadConfig(*configFile)
-	if err != nil {
-		fmt.Printf("[%s] 读取配置文件失败: %v\n", currentTime(), err)
-		return
+	config := &Config{
+		Callback:     "dr1003",
+		LoginMethod:  "1",
+		IPv4:         "",
+		IPv6:         "",
+		MAC:          "000000000000",
+		InletIP:      "192.168.40.2",
+		UserAgent:    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
+		Account:      "",
+		Password:     "",
+		Operator:     "telecom",
+		MaxAttempts:  12,
+		AttemptDelay: 5,
+		OnlyOnce:     false,
 	}
 
 	client := &http.Client{Timeout: 5 * time.Second} // Reuse HTTP client
 
-	loginDone := make(chan struct{}) // Channel to signal login completion
-	defer close(loginDone)
-
-	go func() {
-		defer func() { loginDone <- struct{}{} }()
-
-		loginIfNeeded(config, client)
-	}()
-
-	for range loginDone {
-		// Handle login completion
-		sleep(config.AttemptDelay)
-	}
+	loginIfNeeded(config, client)
 }
 
 func loginIfNeeded(config *Config, client *http.Client) {
@@ -80,9 +71,9 @@ func loginIfNeeded(config *Config, client *http.Client) {
 
 					_, err := client.Get(loginURLWithParams)
 					if err != nil {
-						logMessage(fmt.Sprintf("登录时出现错误: %v", err))
+						fmt.Printf(fmt.Sprintf("登录时出现错误: %v", err))
 					} else {
-						logMessage("登录成功")
+						fmt.Printf("登录成功")
 					}
 				}
 			}
@@ -90,30 +81,4 @@ func loginIfNeeded(config *Config, client *http.Client) {
 
 		time.Sleep(time.Duration(config.AttemptDelay) * time.Second)
 	}
-}
-
-func currentTime() string {
-	return time.Now().Format("2006-01-02 15:04:05")
-}
-
-func logMessage(msg string) {
-	fmt.Printf("[%s] %s\n", currentTime(), msg)
-}
-
-func sleep(seconds int) {
-	time.Sleep(time.Duration(seconds) * time.Second)
-}
-
-func loadConfig(filename string) (*Config, error) {
-	// 从配置文件加载设置并返回配置结构体
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	var config Config
-	err = yaml.Unmarshal(data, &config)
-	if err != nil {
-		return nil, err
-	}
-	return &config, nil
 }
