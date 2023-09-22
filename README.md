@@ -14,6 +14,7 @@
 2. 解压这个文件
 3. 切换到与配置文件相同的目录
 4. 创建并编辑`config.yaml`配置文件
+
 ```yaml
 # 以下是配置信息
 
@@ -47,13 +48,71 @@ attempt_delay: 5
 # 是否只执行一次，即不要死循环
 only_once: false
 ```
+
 5. 直接运行可执行文件，可以指定参数
 
 参数示例
+
 ```bash
 # 指定配置文件的路径
 ./connect_jxyy_network -config ./config.yaml
 ```
+
+目前支持了如下系统和架构
+
+darwin-amd64
+
+darwin-amd64-v3
+
+darwin-arm64
+
+freebsd-386
+
+freebsd-amd64
+
+freebsd-amd64-v3
+
+freebsd-arm64
+
+linux-386
+
+linux-amd64
+
+linux-amd64-v3
+
+linux-arm64
+
+linux-armv5
+
+linux-armv6
+
+linux-armv7
+
+linux-loong64
+
+linux-mips-hardfloat
+
+linux-mips-softfloat
+
+linux-mips64
+
+linux-mips64le
+
+linux-mipsle-hardfloat
+
+linux-mipsle-softfloat
+
+linux-riscv64
+
+windows-386
+
+windows-amd64
+
+windows-amd64
+
+windows-arm64
+
+windows-armv7
 
 ### 使用其它的程序
 
@@ -77,7 +136,7 @@ python 本身只能阉割版的，我懒得弄了
 - Pandavan
   ![截图](docs/images/屏幕截图_20221102_233238.png)
 - OpenWrt
--
+  -
     - 记得配置一下防火墙 ~~（要不然被连上路由器的贱人给断网了）~~
       ![](docs/images/屏幕截图%202023-04-02%20114744.png)
       ![](docs/images/屏幕截图%202023-04-02%20115446.png)
