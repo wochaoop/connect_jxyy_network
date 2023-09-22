@@ -18,7 +18,7 @@ COPY . .
 RUN go build -o connect_jxyy_network
 
 # 压缩可执行文件
-RUN upx -9 connect_jxyy_network
+- RUN upx -9 connect_jxyy_network
 
 # 阶段二：运行阶段
 FROM alpine:latest
