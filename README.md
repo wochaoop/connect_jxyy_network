@@ -88,6 +88,13 @@ only_once: false
 `windows-arm64`
 `windows-armv7`
 
+### 使用 Docker
+
+```bash
+docker run -d --name=connect_jxyy_network \
+-v ${PWD}/config.yaml:/app/config.yaml \
+ghcr.io/wochaoop/connect_jxyy_network:latest
+```
 ### 使用其它的程序
 
 那个`bat`脚本编辑一下配置就可以在 Windows 系统用了，没有做自动检测，但可以利用计划任务实现自动联网

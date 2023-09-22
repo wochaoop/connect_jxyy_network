@@ -13,6 +13,9 @@ RUN go build -o "connect_jxyy_network"
 # 阶段二：运行阶段
 FROM alpine:latest
 
+# 设置工作目录为 /app
+WORKDIR /app
+
 # 从第一阶段中复制生成的可执行文件到当前容器
 COPY --from=builder "/app/connect_jxyy_network" "/app/connect_jxyy_network"
 
