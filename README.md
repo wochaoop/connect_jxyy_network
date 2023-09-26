@@ -58,6 +58,71 @@ only_once: false
 ./connect_jxyy_network -config ./config.yaml
 ```
 
+#### 开机自启
+若要开机自启，有以下方法可供选择
+
+1. 使用`/etc/rc.local`文件
+
+在中间插入`nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &`命令
+在文件中的示例：
+```bash
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &
+
+exit 0
+```
+
+2. 使用 systemctl
+
+对于使用了 systemctl 工具的操作系统，可以尝试使用此方法
+
+新建`/usr/lib/systemd/system/connect_jxyy_network.service`
+
+```bash
+[Unit]
+Description=connect_jxyy_network service
+After=network.target syslog.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart=/root/connect_jxyy_network -config /root/config.yaml
+WorkingDirectory=/root/
+
+[Install]
+WantedBy=multi-user.target
+```
+
+启用这个配置文件：
+
+`systemctl enable connect_jxyy_network`
+
+使用以上命令，程序将在系统启动时自动启动。如果需要重启应用，可以使用以下命令：
+
+`systemctl restart connect_jxyy_network`
+
+如果要停止应用，可以使用以下命令：
+
+`systemctl stop connect_jxyy_network`
+
+要查看应用的日志，可以使用以下命令：
+
+`systemctl status connect_jxyy_network`
+
+#### 支持的系统和架构
+
 目前支持了如下系统和架构
 
 `darwin-amd64`
