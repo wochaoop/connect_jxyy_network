@@ -216,9 +216,7 @@ exit 0
     <arguments>-config ./config.yaml</arguments>
     <interactive>false</interactive>
     <startmode>Automatic</startmode>
-    <logmode>rotate</logmode>
-    <sizeThreshold>64K</sizeThreshold>
-    <logFiles>4</logFiles>
+    <log mode="none"/>
 </service>
 ```
 
