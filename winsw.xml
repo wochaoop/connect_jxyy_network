@@ -1,0 +1,12 @@
+<service>
+    <id>connect_jxyy_network</id>
+    <name>connect_jxyy_network</name>
+    <description>connect_jxyy_network Service</description>
+    <executable>connect_jxyy_network.exe</executable>
+    <arguments>-config ./config.yaml</arguments>
+    <interactive>false</interactive>
+    <startmode>Automatic</startmode>
+    <logmode>rotate</logmode>
+    <sizeThreshold>64K</sizeThreshold>
+    <logFiles>4</logFiles>
+</service>

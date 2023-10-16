@@ -5,3 +5,4 @@ config.yaml
 dist/
 bin/
 connect_jxyy_network
+*.log

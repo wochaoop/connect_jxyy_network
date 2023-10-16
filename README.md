@@ -59,36 +59,14 @@ only_once: false
 ```
 
 #### 开机自启
-若要开机自启，有以下方法可供选择
 
-1. 使用`/etc/rc.local`文件
+若要开机自启，有以下几种方法可供选择
 
-在中间插入`nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &`命令
-在文件中的示例：
-```bash
-#!/bin/sh -e
-#
-# rc.local
-#
-# This script is executed at the end of each multiuser runlevel.
-# Make sure that the script will "exit 0" on success or any other
-# value on error.
-#
-# In order to enable or disable this script just change the execution
-# bits.
-#
-# By default this script does nothing.
+##### 使用 systemctl
 
-nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &
+对于使用了 systemctl 工具的操作系统，推荐使用此方法
 
-exit 0
-```
-
-2. 使用 systemctl
-
-对于使用了 systemctl 工具的操作系统，可以尝试使用此方法
-
-新建`/usr/lib/systemd/system/connect_jxyy_network.service`
+新建`/usr/lib/systemd/system/connect_jxyy_network.service`配置文件
 
 ```bash
 [Unit]
@@ -120,6 +98,148 @@ WantedBy=multi-user.target
 要查看应用的日志，可以使用以下命令：
 
 `systemctl status connect_jxyy_network`
+
+以上路径请根据实际情况修改
+
+##### 使用service命令启动和管理服务
+如果是在不使用 systemctl 命令而是使用 service 命令的 Linux/Unix 系统发行版上，推荐使用这种方法
+
+新建`/etc/init.d/connect_jxyy_network`脚本文件
+
+编辑这个脚本文件：
+
+```bash
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          connect_jxyy_network
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $network $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start connect_jxyy_network service
+### END INIT INFO
+
+case "$1" in
+  start)
+    echo "Starting connect_jxyy_network service..."
+    /root/connect_jxyy_network -config /root/config.yaml &
+    ;;
+  stop)
+    echo "Stopping connect_jxyy_network service..."
+    pkill -f "/root/connect_jxyy_network -config /root/config.yaml"
+    ;;
+  restart)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0
+```
+
+授予执行权限：
+
+```bash
+chmod +x /etc/init.d/connect_jxyy_network
+```
+
+启用服务：
+
+```bash
+service connect_jxyy_network start
+```
+
+管理服务
+
+```bash
+service connect_jxyy_network stop    # 停止服务
+service connect_jxyy_network restart # 重启服务
+```
+
+这样，你的服务就会使用service命令进行管理，可以在系统启动时自动运行，也可以手动启动、停止和重启
+
+请确保脚本中的路径和命令是正确的，以便服务能够正常启动和运行
+
+##### 使用`/etc/rc.local`文件
+
+对于极致精简以及自定义了内核的 Linux/Unix 操作系统，则推荐下面的方式
+
+有时候可以在诸如 OpenWrt、Pandavan 等的路由操作系统的 GUI 界面找到这个配置文件的编辑框
+
+在中间插入`nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &`命令
+
+在文件中的示例：
+
+```bash
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &
+
+exit 0
+```
+
+##### 使用winsw
+
+对于 Windows 系统，推荐使用此方法
+
+首先下载`winsw`：
+
+- 访问`winsw`的 GitHub 页面：[winsw](https://github.com/winsw/winsw/releases/latest)
+- 下载对应架构的最新版本的`winsw`
+- 解压缩下载的`winsw`可执行文件
+- 重命名`winsw.exe`并移动到本程序的相同目录中
+
+然后编写`winsw.xml`文件，可以根据需要自行修改
+
+```xml
+<service>
+    <id>connect_jxyy_network</id>
+    <name>connect_jxyy_network</name>
+    <description>connect_jxyy_network Service</description>
+    <executable>connect_jxyy_network.exe</executable>
+    <arguments>-config ./config.yaml</arguments>
+    <interactive>false</interactive>
+    <startmode>Automatic</startmode>
+    <logmode>rotate</logmode>
+    <sizeThreshold>64K</sizeThreshold>
+    <logFiles>4</logFiles>
+</service>
+```
+
+安装服务：
+
+- 打开命令提示符或PowerShell，并使用管理员权限运行。
+- 运行以下命令安装服务：
+
+```
+.\winsw.exe install winsw.xml
+```
+
+到这里就已经完成了安装服务，下一次重启就能开机自启了
+
+启动服务：
+
+- 运行以下命令立即启动服务：
+
+```
+.\winsw.exe start winsw.xml
+```
 
 #### 支持的系统和架构
 

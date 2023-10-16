@@ -1,0 +1,12 @@
+[Unit]
+Description=connect_jxyy_network service
+After=network.target syslog.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart=/root/connect_jxyy_network -config /root/config.yaml
+WorkingDirectory=/root/
+
+[Install]
+WantedBy=multi-user.target
