@@ -241,6 +241,9 @@ exit 0
 .\winsw.exe start winsw.xml
 ```
 
+如果一切正常，在`Windows 服务`能看到这个服务：
+![Windows 服务](docs/images/屏幕截图%202023-10-16%20150555.png)
+
 #### 支持的系统和架构
 
 目前支持了如下系统和架构
