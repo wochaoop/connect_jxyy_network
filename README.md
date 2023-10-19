@@ -8,8 +8,6 @@
 
 ## 快速开始
 
-### 使用Go 语言的程序
-
 1. 去 [Releases](https://github.com/wochaoop/connect_jxyy_network/releases) 下载对应架构的压缩包
 2. 解压这个文件
 3. 切换到与配置文件相同的目录
@@ -58,13 +56,13 @@ only_once: false
 ./connect_jxyy_network -config ./config.yaml
 ```
 
-#### 开机自启
+### 开机自启
 
 若要开机自启，有以下几种方法可供选择
 
-##### 使用 systemctl
+#### 使用 Systemd 的 init 系统
 
-对于使用了 systemctl 工具的操作系统，推荐使用此方法
+对于使用了 systemd 的操作系统，推荐使用此方法
 
 新建`/usr/lib/systemd/system/connect_jxyy_network.service`配置文件
 
@@ -101,8 +99,8 @@ WantedBy=multi-user.target
 
 以上路径请根据实际情况修改
 
-##### 使用service命令启动和管理服务
-如果是在不使用 systemctl 命令而是使用 service 命令的 Linux/Unix 系统发行版上，推荐使用这种方法
+#### 使用 OpenRC 的 init系统
+对于使用 service 命令的操作系统发行版上，推荐使用这种方法
 
 新建`/etc/init.d/connect_jxyy_network`脚本文件
 
@@ -165,7 +163,7 @@ service connect_jxyy_network restart # 重启服务
 
 请确保脚本中的路径和命令是正确的，以便服务能够正常启动和运行
 
-##### 使用`/etc/rc.local`文件
+#### 使用`/etc/rc.local`文件
 
 对于极致精简以及自定义了内核的 Linux/Unix 操作系统，则推荐下面的方式
 
@@ -194,7 +192,7 @@ nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &
 exit 0
 ```
 
-##### 使用winsw
+#### 使用winsw
 
 对于 Windows 系统，推荐使用此方法
 
@@ -225,7 +223,7 @@ exit 0
 - 打开命令提示符或PowerShell，并使用管理员权限运行。
 - 运行以下命令安装服务：
 
-```
+```bat
 .\winsw.exe install winsw.xml
 ```
 
@@ -235,14 +233,28 @@ exit 0
 
 - 运行以下命令立即启动服务：
 
-```
+```bat
 .\winsw.exe start winsw.xml
 ```
 
 如果一切正常，在`Windows 服务`能看到这个服务：
 ![Windows 服务](docs/images/屏幕截图%202023-10-16%20150555.png)
 
-#### 支持的系统和架构
+#### 使用 Docker
+
+如果操作系统安装了 docker ，则可以尝试这个方式
+
+```bash
+docker run -d --restart=always \
+--pull=always \
+--name=connect_jxyy_network \
+-v ${PWD}/config.yaml:/app/config.yaml \
+ghcr.io/wochaoop/connect_jxyy_network:latest
+```
+
+指定`--restart`以实现开机自启
+
+## 支持的系统和架构
 
 目前支持了如下系统和架构
 
@@ -274,14 +286,11 @@ exit 0
 `windows-arm64`
 `windows-armv7`
 
-### 使用 Docker
+## 使用其它的程序
 
-```bash
-docker run -d --name=connect_jxyy_network \
--v ${PWD}/config.yaml:/app/config.yaml \
-ghcr.io/wochaoop/connect_jxyy_network:latest
-```
-### 使用其它的程序
+如果上面的 Go 程序不适合您的操作系统，那么您可以尝试我们的旧版方案：
+
+我们在[其他版本/](其他版本/)中归档了旧版方案
 
 那个`bat`脚本编辑一下配置就可以在 Windows 系统用了，没有做自动检测，但可以利用计划任务实现自动联网
 
@@ -309,7 +318,7 @@ python 本身只能阉割版的，我懒得弄了
       ![](docs/images/屏幕截图%202023-04-02%20115446.png)
       ![](docs/images/屏幕截图%202023-04-02%20115553.png)
 
-## 参考文献：
+## 参考文献
 
 - [Dr.COM校园网多设备解决方案——路由器 Padavan/LuCI 固件自动网页认证+Telegram Bot 定时发送连接情况 - 老虎豆](https://tiger.fail/archives/drcom-autologin-padavan-tgbot.html)
 - [drcoms/drcom-generic: Dr.COM/DrCOM 现已覆盖 d p x三版。](https://github.com/drcoms/drcom-generic)
