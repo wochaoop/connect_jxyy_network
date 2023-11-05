@@ -29,7 +29,9 @@ jobs:
 
       - name: Install UPX
         run: |
-          curl -L -o upx.tar.xz https://github.com/upx/upx/releases/latest/download/upx-4.1.0-amd64_linux.tar.xz
+          latest_version=$(curl -s https://api.github.com/repos/upx/upx/releases/latest | grep -o '"tag_name": "v.*"' | cut -d'"' -f4)
+          download_url="https://github.com/upx/upx/releases/download/${latest_version}/upx-${latest_version#v}-amd64_linux.tar.xz"
+          curl -L -o upx.tar.xz $download_url
           tar -xJf upx.tar.xz
           mv upx-*-amd64_linux/upx /usr/local/bin/
 
