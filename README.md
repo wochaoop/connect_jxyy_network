@@ -131,8 +131,16 @@ case "$1" in
     sleep 1
     $0 start
     ;;
+  status)
+    pgrep -f "/root/connect_jxyy_network -config /root/config.yaml" > /dev/null
+    if [ $? -eq 0 ]; then
+      echo "connect_jxyy_network service is running."
+    else
+      echo "connect_jxyy_network service is not running."
+    fi
+    ;;
   *)
-    echo "Usage: $0 {start|stop|restart}"
+    echo "Usage: $0 {start|stop|restart|status}"
     exit 1
     ;;
 esac
