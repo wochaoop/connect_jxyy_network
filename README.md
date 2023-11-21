@@ -107,45 +107,45 @@ WantedBy=multi-user.target
 编辑这个脚本文件：
 
 ```bash
-#!/bin/bash
-### BEGIN INIT INFO
-# Provides:          connect_jxyy_network
-# Required-Start:    $network $local_fs $remote_fs
-# Required-Stop:     $network $local_fs $remote_fs
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start connect_jxyy_network service
-### END INIT INFO
+#!/bin/sh /etc/rc.common
 
-case "$1" in
-  start)
-    echo "Starting connect_jxyy_network service..."
-    /root/connect_jxyy_network -config /root/config.yaml &
-    ;;
-  stop)
-    echo "Stopping connect_jxyy_network service..."
-    pkill -f "/root/connect_jxyy_network -config /root/config.yaml"
-    ;;
-  restart)
+START=90
+STOP=10
+
+SERVICE_NAME="connect_jxyy_network"
+SERVICE_PATH="/root/$SERVICE_NAME"
+CONFIG_PATH="/root/config.yaml"
+
+start() {
+    echo "Starting $SERVICE_NAME service..."
+    nohup $SERVICE_PATH -config=$CONFIG_PATH >/dev/null 2>&1 &
+}
+
+stop() {
+    echo "Stopping $SERVICE_NAME service..."
+    killall -q "$SERVICE_PATH"
+}
+
+restart() {
     $0 stop
     sleep 1
     $0 start
-    ;;
-  status)
-    pgrep -f "/root/connect_jxyy_network -config /root/config.yaml" > /dev/null
-    if [ $? -eq 0 ]; then
-      echo "connect_jxyy_network service is running."
-    else
-      echo "connect_jxyy_network service is not running."
-    fi
-    ;;
-  *)
-    echo "Usage: $0 {start|stop|restart|status}"
-    exit 1
-    ;;
-esac
+}
 
-exit 0
+status() {
+    pgrep -f "$SERVICE_PATH -config $CONFIG_PATH" > /dev/null
+    if [ $? -eq 0 ]; then
+        echo "$SERVICE_NAME service is running."
+    else
+        echo "$SERVICE_NAME service is not running."
+    fi
+}
+
+reload() {
+    echo "Reloading $SERVICE_NAME service..."
+    $0 stop
+    $0 start
+}
 ```
 
 授予执行权限：
@@ -158,6 +158,11 @@ chmod +x /etc/init.d/connect_jxyy_network
 
 ```bash
 service connect_jxyy_network start
+```
+
+开机自启这个服务：
+```bash
+service connect_jxyy_network enable
 ```
 
 管理服务
