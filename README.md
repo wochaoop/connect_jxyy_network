@@ -99,7 +99,7 @@ WantedBy=multi-user.target
 
 以上路径请根据实际情况修改
 
-#### 使用 OpenRC 的 init系统
+#### 使用 OpenRC 的 init 系统
 对于使用 service 命令的操作系统发行版上，推荐使用这种方法
 
 新建`/etc/init.d/connect_jxyy_network`脚本文件
@@ -176,6 +176,60 @@ service connect_jxyy_network restart # 重启服务
 
 请确保脚本中的路径和命令是正确的，以便服务能够正常启动和运行
 
+#### 使用 launchctl 工具添加启动项
+
+对于 macOS 系统，推荐使用这种方法
+
+新建`/Library/LaunchDaemons/connect_jxyy_network.plist`配置文件
+
+写入以下内容：（/your/path 应该替换为你实际存放的位置）
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>connect_jxyy_network</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/your/path/connect_jxyy_network</string>
+        <string>-config</string>
+        <string>/your/path/config.yaml</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+</dict>
+</plist>
+```
+
+检查plist语法是否正确
+```zsh
+plutil /Library/LaunchDaemons/connect_jxyy_network.plist
+```
+
+修改文件权限
+```zsh
+chmod 644 /Library/LaunchDaemons/connect_jxyy_network.plist
+```
+
+添加自启动项
+```zsh
+launchctl load /Library/LaunchDaemons/connect_jxyy_network.plist
+```
+
+启动自启动项
+```zsh
+launchctl start connect_jxyy_network.plist
+```
+
+删除自启动项：
+```zsh
+launchctl unload /Library/LaunchDaemons/connect_jxyy_network.plist
+```
+
 #### 使用`/etc/rc.local`文件
 
 对于极致精简以及自定义了内核的 Linux/Unix 操作系统，则推荐下面的方式
@@ -205,7 +259,7 @@ nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &
 exit 0
 ```
 
-#### 使用winsw
+#### 使用 winsw
 
 对于 Windows 系统，推荐使用此方法
 
@@ -303,7 +357,7 @@ ghcr.io/wochaoop/connect_jxyy_network:latest
 
 如果上面的 Go 程序不适合您的操作系统，那么您可以尝试我们的旧版方案：
 
-我们在[其他版本/](其他版本/)中归档了旧版方案
+我们在 [其他版本/](其他版本/) 中归档了旧版方案
 
 那个`bat`脚本编辑一下配置就可以在 Windows 系统用了，没有做自动检测，但可以利用计划任务实现自动联网
 
