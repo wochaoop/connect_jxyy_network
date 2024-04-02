@@ -6,3 +6,4 @@ dist/
 bin/
 connect_jxyy_network
 *.log
+target/

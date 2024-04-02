@@ -1,0 +1,15 @@
+[package]
+name = "connect_jxyy_network"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+reqwest = "0.12.2"
+serde = { version = "1.0.197", features = ["derive"] }
+serde_yaml = "0.9.34+deprecated"
+clap = "4.5.4"
+serde_urlencoded = "0.7.1"
+url = "2.5.0"
+tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
