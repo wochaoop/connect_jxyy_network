@@ -218,7 +218,7 @@ $(gz_releases): %.gz : %
 	rm -r $(BINDIR)/$(basename $@)
 
 $(zip_releases): %.zip : %
-	-upx -9 $(BINDIR)/$(basename $@)/$(NAME)
+	-upx -9 $(BINDIR)/$(basename $@)/$(NAME).exe
 	zip -m -j $(BINDIR)/$(basename $@)/$(NAME)-$(VERSION).zip $(BINDIR)/$(basename $@)/$(NAME).exe
 	mv $(BINDIR)/$(basename $@)/$(NAME)-$(VERSION).zip $(BINDIR)/$(NAME)-$(basename $@)-$(VERSION).zip
 	rm -r $(BINDIR)/$(basename $@)
