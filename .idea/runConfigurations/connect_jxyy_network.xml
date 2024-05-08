@@ -3,6 +3,7 @@
     <module name="connect_jxyy_network" />
     <working_directory value="$PROJECT_DIR$" />
     <kind value="DIRECTORY" />
+    <package value="github.com/wochaoop/connect_jxyy_network" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$" />
     <output_directory value="$PROJECT_DIR$" />
