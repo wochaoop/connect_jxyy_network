@@ -4,14 +4,23 @@
 
 目前在 20 栋的 Dr.COM EPortal 的登录系统中测试通过
 
+本程序永远都不会提供任何违反法律法规以及任何破坏网络安全的功能，这个程序只是一个解放双手的工具，解决每次都要手动登录校园网的繁琐步骤，不会对网络安全造成任何威胁
+
 目前最新的是 Go 语言版本，使用前请复制`config_example.yaml`到可执行文件目录下的`config.yaml`，然后根据提示填进去就可以了
+
+搓这个程序最初是为了 最小硬件开销 以及 最大硬件兼容性，前人的方案要么是 curl 命令要么是 OpenWrt 插件，或者 Python 脚本，硬件开销都太大了点，所以我就搓了这个 Go 语言的程序，Go 最大的优势就是编译后的程序体积小，而且不依赖于系统库，所以可以在很多系统上运行
+
+实验性：Rust 版本，请另见 [rust](https://github.com/wochaoop/connect_jxyy_network/tree/rust) 分支
+
+> [!NOTE]
+> 学长要毕业跑路啦， ~~现在急需接盘侠，~~ 后续维护可以发起 PR 或者 Issue
 
 ## 快速开始
 
-1. 去 [Releases](https://github.com/wochaoop/connect_jxyy_network/releases) 下载对应架构的压缩包
+1. 去 [Releases](https://github.com/wochaoop/connect_jxyy_network/releases) 下载对应系统架构的压缩包
 2. 解压这个文件
 3. 切换到与配置文件相同的目录
-4. 创建并编辑`config.yaml`配置文件
+4. 创建并编辑`config.yaml`配置文件（也可以通过其他方式上传配置文件）
 
 ```yaml
 # 以下是配置信息
@@ -49,7 +58,7 @@ only_once: false
 
 5. 直接运行可执行文件，可以指定参数
 
-参数示例
+参数示例：
 
 ```bash
 # 指定配置文件的路径
@@ -100,6 +109,7 @@ WantedBy=multi-user.target
 以上路径请根据实际情况修改
 
 #### 使用 OpenRC 的 init 系统
+
 对于使用 service 命令的操作系统发行版上，推荐使用这种方法
 
 新建`/etc/init.d/connect_jxyy_network`脚本文件
@@ -259,6 +269,16 @@ nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &
 exit 0
 ```
 
+#### 使用 nohup 命令
+
+对于不支持 init 系统的 Linux/Unix 操作系统，推荐使用此方法
+
+```bash
+nohup /root/connect_jxyy_network -config=/root/config.yaml >/dev/null 2>&1 &
+```
+
+这样，程序将在后台运行，即使退出终端也不会停止，但是重启系统后需要重新运行这个命令
+
 #### 使用 winsw
 
 对于 Windows 系统，推荐使用此方法
@@ -323,35 +343,61 @@ ghcr.io/wochaoop/connect_jxyy_network:latest
 
 ## 支持的系统和架构
 
-目前支持了如下系统和架构
+目前支持了如下系统、平台和架构
 
+`aix-ppc64`
+`android-arm64`
 `darwin-amd64`
-`darwin-amd64-v3`
 `darwin-arm64`
+`dragonfly-amd64`
 `freebsd-386`
 `freebsd-amd64`
-`freebsd-amd64-v3`
+`freebsd-arm`
 `freebsd-arm64`
+`freebsd-riscv64`
+`illumos-amd64`
+`ios-amd64`
+`ios-arm64`
+`js-wasm`
 `linux-386`
 `linux-amd64`
-`linux-amd64-v3`
+`linux-arm`
 `linux-arm64`
-`linux-armv5`
-`linux-armv6`
-`linux-armv7`
 `linux-loong64`
-`linux-mips-hardfloat`
-`linux-mips-softfloat`
+`linux-mips`
 `linux-mips64`
 `linux-mips64le`
-`linux-mipsle-hardfloat`
-`linux-mipsle-softfloat`
+`linux-mipsle`
+`linux-ppc64`
+`linux-ppc64le`
 `linux-riscv64`
+`linux-s390x`
+`netbsd-386`
+`netbsd-amd64`
+`netbsd-arm`
+`netbsd-arm64`
+`openbsd-386`
+`openbsd-amd64`
+`openbsd-arm`
+`openbsd-arm64`
+`openbsd-ppc64`
+`plan9-386`
+`plan9-amd64`
+`plan9-arm`
+`solaris-amd64`
+`wasip1-wasm`
 `windows-386`
 `windows-amd64`
-`windows-amd64`
+`windows-amd64-v3`
 `windows-arm64`
 `windows-armv7`
+
+
+如果您的系统和架构不在上面的列表中，您可以尝试自行编译
+
+愿意折腾的话，可以自行尝试动态链接库的方式编译，这样可以减小体积
+
+[Releases](https://github.com/wochaoop/connect_jxyy_network/releases) 中的文件是静态链接的，体积较大，不过通用性较好
 
 ## 使用其它的程序
 
@@ -361,14 +407,16 @@ ghcr.io/wochaoop/connect_jxyy_network:latest
 
 那个`bat`脚本编辑一下配置就可以在 Windows 系统用了，没有做自动检测，但可以利用计划任务实现自动联网
 
-`sh`脚本用在 Linux 系统上 ~~（废话）~~ ,结合 crontab 就可以实现全自动联网，解放双手
+`sh`脚本用在 Linux/Unix 系统上 ~~（废话）~~ ,结合 crontab 就可以实现全自动联网，解放双手
+
+对于某些类Unix系统，可能旧的`sh`脚本会有问题，可以尝试使用新的 Go 版本 的程序
 
 理论上 dr.com 的网关系统都可以，这个脚本使用的是 GET 方法提交 ~~(POST方法应该也行？但我试了无效，也许别的学校可以？)~~
 
 其实还可以写成 python 脚本的，但毕竟我是塞 OpenWrt 系统里用的，我的 Redmi AC2100 路由器是 mips32 的架构，本身才 128M 内存，
 python 本身只能阉割版的，我懒得弄了
 
-还是 shell 脚本比较通用
+~~还是 shell 脚本比较通用~~
 
 ## 截图
 

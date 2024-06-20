@@ -22,7 +22,9 @@ PLATFORM_LIST = \
     ios-arm64 \
     linux-386 \
     linux-amd64 \
-    linux-arm \
+    linux-arm-v5 \
+    linux-arm-v6 \
+    linux-arm-v7 \
     linux-arm64 \
     linux-loong64 \
     linux-mips \
@@ -116,8 +118,14 @@ linux-386:
 linux-amd64:
 	GOARCH=amd64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
-linux-arm:
-	GOARCH=arm GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
+linux-arm-v5:
+	GOARCH=arm GOOS=linux GOARM=5 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
+
+linux-arm-v6:
+	GOARCH=arm GOOS=linux GOARM=6 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
+
+linux-arm-v7:
+	GOARCH=arm GOOS=linux GOARM=7 $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
 
 linux-arm64:
 	GOARCH=arm64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(basename $@)/$(NAME)
