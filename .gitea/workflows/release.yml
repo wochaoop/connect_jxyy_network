@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.22'
+          cache: 'go-build'
+
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install Build Tools
+        run: |
+          apt update && apt install -y zip
+          latest_version=$(curl -s https://api.github.com/repos/upx/upx/releases/latest | grep -o '"tag_name": "v.*"' | cut -d'"' -f4)
+          download_url="https://github.com/upx/upx/releases/download/${latest_version}/upx-${latest_version#v}-amd64_linux.tar.xz"
+          curl -L -o upx.tar.xz $download_url
+          tar -xJf upx.tar.xz
+          mv upx-*-amd64_linux/upx /usr/local/bin/
+
+      - name: Build and Release
+        env:
+          NAME: hrss_update
+          BINDIR: bin
+        run: |
+          make releases
+          cp config_example.yml bin/config.yml
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: https://gitea.com/actions/release-action@main
+        with:
+          files: |-
+            bin/**
+          api_key: ${{ secrets.GITHUB_TOKEN }}
