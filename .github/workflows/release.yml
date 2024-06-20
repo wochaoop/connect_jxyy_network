@@ -23,17 +23,37 @@ jobs:
           path: |
             ~/go/pkg/mod
             ~/.cache/go-build
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Install UPX
+      - name: Install Build Tools
         run: |
+          apt update && apt install -y zip
+          arch=$(uname -m)
+          case $arch in
+            x86_64)
+              arch="amd64"
+              ;;
+            aarch64)
+              arch="arm64"
+              ;;
+            armv*)
+              arch="arm"
+              ;;
+            i?86)
+              arch="i386"
+              ;;
+            *)
+              echo "unsupported architecture"
+              exit 1
+              ;;
+          esac
           latest_version=$(curl -s https://api.github.com/repos/upx/upx/releases/latest | grep -o '"tag_name": "v.*"' | cut -d'"' -f4)
-          download_url="https://github.com/upx/upx/releases/download/${latest_version}/upx-${latest_version#v}-amd64_linux.tar.xz"
+          download_url="https://github.com/upx/upx/releases/download/${latest_version}/upx-${latest_version#v}-${arch}_linux.tar.xz"
           curl -L -o upx.tar.xz $download_url
           tar -xJf upx.tar.xz
-          mv upx-*-amd64_linux/upx /usr/local/bin/
+          mv upx-*-${arch}_linux/upx /usr/local/bin/
 
       - name: Build and Release
         env:
