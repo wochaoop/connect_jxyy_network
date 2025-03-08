@@ -47,6 +47,9 @@ func main() {
 		defer func() { loginDone <- struct{}{} }()
 
 		loginIfNeeded(config, client)
+		if config.OnlyOnce {
+			return
+		}
 	}()
 
 	for range loginDone {
